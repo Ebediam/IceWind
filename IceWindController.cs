@@ -25,18 +25,15 @@ namespace IceWind
         public bool isBeingFrozen;
         
 
-
         public void UpdateFrozenStatus()
-        {
+        {           
             if (!creature)
             {
-                IceWindController.frozenCreatures.Remove(this);
-                IceWindController.frozenCreatures.Sort();
+                //IceWindController.frozenCreatures.Remove(this);
+                //IceWindController.frozenCreatures.Sort();
                 return;
             }
 
-
-            Debug.Log("UpdateFrozenStatus");
             if (isBeingFrozen)
             {
                 freezePercent += freezeSpeed * Time.deltaTime;
@@ -64,8 +61,6 @@ namespace IceWind
             float currentLocomotionSpeed = Mathf.Lerp(defaultLocomotionSpeed, 0, freezePercent);
             creature.locomotion.speed = currentLocomotionSpeed;
 
-            Debug.Log("The creature is " + (freezePercent * 100f) + "% frozen");
-
         }
 
 
@@ -76,18 +71,18 @@ namespace IceWind
     {
         public static List<FrozenCreature> frozenCreatures = new List<FrozenCreature>();
         public ParticleSystem iceWindVFX;
-        public Side side;
         public TriggerDetector trigger;
         public AudioSource iceWindSFX;
+        public BodyHand hand;
+        public bool active;
 
         public void Start()
         {
-            Debug.Log("-----------ICE WIND CONTROLLER STARTS---------");
 
             trigger = transform.Find("AttackCone").gameObject.AddComponent<TriggerDetector>();
             trigger.controller = this;
 
-            if(side == Side.Left)
+            if(hand.side == Side.Left)
             {
                 transform.Find("AttackCone").Rotate(transform.Find("AttackCone").up, 180f);
             }
@@ -101,42 +96,50 @@ namespace IceWind
 
         public void Update()
         {
-            switch (side)
+
+            if (frozenCreatures.Count > 0)
             {
-                case Side.Left:
-                    if (PlayerControl.handLeft.castPressed)
-                    {
-                        CastIceWind();
-                    }
-                    else
-                    {
-                        StopIceWind();
-                    }
-                    break;
-
-                case Side.Right:
-                    if (PlayerControl.handRight.castPressed)
-                    {
-                        CastIceWind();
-                    }
-                    else
-                    {
-                        StopIceWind();
-                    }
-                    break;
-
+                foreach (FrozenCreature frozenCreature in frozenCreatures)
+                {
+                    frozenCreature.UpdateFrozenStatus();
+                }
             }
-            
-            if(frozenCreatures.Count == 0)
+
+            if (!active)
             {
                 return;
             }
 
-            foreach(FrozenCreature frozenCreature in frozenCreatures)
-            {
-                frozenCreature.UpdateFrozenStatus();
-            }
 
+            if (!hand.interactor.grabbedHandle)
+            {
+                switch (hand.side)
+                {
+                    case Side.Left:
+                        if (PlayerControl.handLeft.castPressed)
+                        {
+                            CastIceWind();
+                        }
+                        else
+                        {
+                            StopIceWind();
+                        }
+                        break;
+
+                    case Side.Right:
+                        if (PlayerControl.handRight.castPressed)
+                        {
+                            CastIceWind();
+                        }
+                        else
+                        {
+                            StopIceWind();
+                        }
+                        break;
+
+                }
+            }                  
+          
 
         }
 
@@ -156,7 +159,12 @@ namespace IceWind
             {
                 iceWindVFX.Stop();
                 iceWindSFX.Stop();
-                //trigger.collider.enabled = false;                
+                trigger.collider.enabled = false;                
+                foreach(FrozenCreature frozenCreature in frozenCreatures)
+                {
+                    frozenCreature.isBeingFrozen = false;
+                }
+                
             }
         }
 

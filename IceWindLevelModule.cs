@@ -8,7 +8,10 @@ namespace IceWind
         public Body playerBody;
         public IceWindController leftIceWind;
         public IceWindController rightIceWind;
+        public Spell iceWindSpellR;
+        public Spell iceWindSpellL;
         
+
 
         public override void OnLevelLoaded(LevelDefinition levelDefinition)
         {
@@ -19,7 +22,6 @@ namespace IceWind
         {
             if (!Player.local)
             {
-
                 return;
             }
             else
@@ -38,7 +40,6 @@ namespace IceWind
                     }
                     else 
                     {
-
                         GetIceWindSpell(Player.local.body.handLeft);
                         GetIceWindSpell(Player.local.body.handRight);
                     }
@@ -89,36 +90,51 @@ namespace IceWind
                 return;
             }
 
+            
 
             switch (hand.side)
             {
                 case Side.Left:
                     if (leftIceWind)
                     {
+                        if(hand.caster.currentSpell != iceWindSpellL)
+                        {
+                            leftIceWind.active = false;
+                        }   
                         return;
                     }
                     else
                     {
                         if (hand.caster.currentSpell.name == "IceSpell(Clone)")
                         {
+                            iceWindSpellL = hand.caster.currentSpell;
                             leftIceWind = hand.caster.currentSpell.gameObject.AddComponent<IceWindController>();
-                            leftIceWind.side = Side.Left;
+                            leftIceWind.hand = hand;
+                            leftIceWind.active = true;
                         }
+
                     }
                     return;
 
                 case Side.Right:
                     if (rightIceWind)
                     {
+                        if(hand.caster.currentSpell != iceWindSpellR)
+                        {
+                            rightIceWind.active = false;
+                        }
                         return;
                     }
                     else
                     {
                         if(hand.caster.currentSpell.name == "IceSpell(Clone)")
                         {
+                            iceWindSpellR = hand.caster.currentSpell;
                             rightIceWind = hand.caster.currentSpell.gameObject.AddComponent<IceWindController>();
-                            rightIceWind.side = Side.Right;
+                            rightIceWind.hand = hand;
+                            rightIceWind.active = true;
                         }
+
                     }
                     return;
 
