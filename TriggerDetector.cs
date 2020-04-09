@@ -16,6 +16,7 @@ namespace IceWind
         public void Start()
         {
             collider = gameObject.GetComponent<Collider>();
+            collider.enabled = false;
         }
         private void OnTriggerEnter(Collider other)
         {

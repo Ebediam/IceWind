@@ -1,5 +1,3 @@
-D:\General\B&S MOds\Plugins\IceWindSpell\IceWind\bin\Release\IceWind_V1.dll
-D:\General\B&S MOds\Plugins\IceWindSpell\IceWind\bin\Release\IceWind_V1.pdb
 D:\General\B&S MOds\Plugins\IceWindSpell\IceWind\bin\Release\Assembly-CSharp.dll
 D:\General\B&S MOds\Plugins\IceWindSpell\IceWind\bin\Release\UnityEngine.AudioModule.dll
 D:\General\B&S MOds\Plugins\IceWindSpell\IceWind\bin\Release\UnityEngine.CoreModule.dll
@@ -74,5 +72,7 @@ D:\General\B&S MOds\Plugins\IceWindSpell\IceWind\bin\Release\Unity.RenderPipelin
 D:\General\B&S MOds\Plugins\IceWindSpell\IceWind\obj\Release\IceWind.csprojAssemblyReference.cache
 D:\General\B&S MOds\Plugins\IceWindSpell\IceWind\obj\Release\IceWind.csproj.CoreCompileInputs.cache
 D:\General\B&S MOds\Plugins\IceWindSpell\IceWind\obj\Release\IceWind.csproj.CopyComplete
-D:\General\B&S MOds\Plugins\IceWindSpell\IceWind\obj\Release\IceWind_V1.dll
-D:\General\B&S MOds\Plugins\IceWindSpell\IceWind\obj\Release\IceWind_V1.pdb
+D:\General\B&S MOds\Plugins\IceWindSpell\IceWind\bin\Release\IceWind_V2.dll
+D:\General\B&S MOds\Plugins\IceWindSpell\IceWind\bin\Release\IceWind_V2.pdb
+D:\General\B&S MOds\Plugins\IceWindSpell\IceWind\obj\Release\IceWind_V2.dll
+D:\General\B&S MOds\Plugins\IceWindSpell\IceWind\obj\Release\IceWind_V2.pdb

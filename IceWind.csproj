@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>IceWind</RootNamespace>
-    <AssemblyName>IceWind_V1</AssemblyName>
+    <AssemblyName>IceWind_V2</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -68,6 +68,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FrozenCreature.cs" />
+    <Compile Include="FrozenItem.cs" />
     <Compile Include="TriggerDetector.cs" />
     <Compile Include="IceWindController.cs" />
     <Compile Include="IceWindLevelModule.cs" />

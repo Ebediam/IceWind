@@ -10,7 +10,7 @@ namespace IceWind
         public IceWindController rightIceWind;
         public Spell iceWindSpellR;
         public Spell iceWindSpellL;
-        
+        public static float iceImbuingDuration = 5f;
 
 
         public override void OnLevelLoaded(LevelDefinition levelDefinition)
@@ -100,6 +100,7 @@ namespace IceWind
                         if(hand.caster.currentSpell != iceWindSpellL)
                         {
                             leftIceWind.active = false;
+                            leftIceWind.frostVFX.Stop();
                         }   
                         return;
                     }
@@ -111,6 +112,7 @@ namespace IceWind
                             leftIceWind = hand.caster.currentSpell.gameObject.AddComponent<IceWindController>();
                             leftIceWind.hand = hand;
                             leftIceWind.active = true;
+                            leftIceWind.frostVFX.Play();
                         }
 
                     }
@@ -122,6 +124,7 @@ namespace IceWind
                         if(hand.caster.currentSpell != iceWindSpellR)
                         {
                             rightIceWind.active = false;
+                            rightIceWind.frostVFX.Stop();
                         }
                         return;
                     }
@@ -133,6 +136,7 @@ namespace IceWind
                             rightIceWind = hand.caster.currentSpell.gameObject.AddComponent<IceWindController>();
                             rightIceWind.hand = hand;
                             rightIceWind.active = true;
+                            rightIceWind.frostVFX.Play();
                         }
 
                     }
