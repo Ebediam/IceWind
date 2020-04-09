@@ -21,6 +21,7 @@ namespace IceWind
         public static List<FrozenCreature> frozenCreatures = new List<FrozenCreature>();
         public ParticleSystem iceWindVFX;
         public ParticleSystem frostVFX;
+        public ParticleSystem frostNPCVFX;
         public TriggerDetector trigger;
         public AudioSource iceWindSFX;
         public BodyHand hand;
@@ -45,14 +46,14 @@ namespace IceWind
             frostVFX = transform.Find("FrostVFX").GetComponent<ParticleSystem>();
 
             iceWindSFX = transform.Find("IcyWindSFX").GetComponent<AudioSource>();
-                        
+            frostNPCVFX = transform.Find("FrostNPCVFX").GetComponent<ParticleSystem>();
+
+            frostNPCVFX.Play();
 
         }
 
         public void Update()
         {
-
-
 
             if (frozenCreatures.Count > 0)
             {
@@ -101,7 +102,7 @@ namespace IceWind
 
         }
 
-        public FrozenItem FreezeItem(Item item, ParticleSystem _ps)
+        public FrozenItem FreezeItem(Item item, ParticleSystem displayPS, ParticleSystem applyPS)
         {
 
             FrozenItem frozenItem = item.gameObject.GetComponent<FrozenItem>();
@@ -132,6 +133,8 @@ namespace IceWind
 
 
             FrozenItem frozenIt = item.gameObject.AddComponent<FrozenItem>();
+            frozenIt.addParticles = IceWindLevelModule.addParticlesToNPC;
+
             frozenIt.frozenVFXs = new List<ParticleSystem>();
 
 
@@ -154,7 +157,7 @@ namespace IceWind
                     foreach (Collider col in colliderGroup.colliders)
                     {
 
-                        ParticleSystem ps = AddParticlesToCollider(col, _ps);
+                        ParticleSystem ps = AddParticlesToCollider(col, displayPS);
 
                         if (ps != null)
                         {
@@ -162,7 +165,7 @@ namespace IceWind
                             if (frozenIt.freezeVFX == null)
                             {
 
-                                frozenIt.freezeVFX = ps;
+                                frozenIt.freezeVFX = applyPS;
 
                             }
                             
@@ -256,7 +259,12 @@ namespace IceWind
 
                 if (item != null)
                 {
-                    FreezeItem(item, frostVFX);
+                    FrozenItem frozenItem = FreezeItem(item, frostVFX, frostNPCVFX);
+                    if (frozenItem)
+                    {
+                        frozenItem.infiniteActive = true;
+                    }
+
                 }
 
             }
@@ -304,7 +312,7 @@ namespace IceWind
 
             if (creature)
             {
-                TryFreezeCreature(creature, true, 0f, frostVFX);
+                TryFreezeCreature(creature, true, 0f, frostNPCVFX, IceWindLevelModule.addParticlesToNPC);
                 return;
             }
 
@@ -318,16 +326,19 @@ namespace IceWind
                 {
                     if (frozenItem.active)
                     {
+
                         frozenItem.ResetTimer();
                     }
                     else
                     {
                         frozenItem.Activate();
+                        frozenItem.infiniteActive = false;
                     }
                 }
                 else
                 {
-                    frozenItem = FreezeItem(item, frostVFX);
+                    frozenItem = FreezeItem(item, frostVFX, frostNPCVFX);
+                    frozenItem.infiniteActive = false;
                     frozenItem.DeactivateTimer();
                 }               
 
@@ -340,9 +351,8 @@ namespace IceWind
 
         }
 
-        public static void TryFreezeCreature(Creature creature, bool freezeOverTime, float freezePercentBonus, ParticleSystem ps)
+        public static void TryFreezeCreature(Creature creature, bool freezeOverTime, float freezePercentBonus, ParticleSystem ps, bool addParticles)
         {
-
             if (creature == Creature.player)
             {
                 return;
@@ -354,6 +364,8 @@ namespace IceWind
                 {
                     if (_frozenCreature.creature == creature)
                     {
+                        _frozenCreature.wasDead = false;
+
                         if (freezeOverTime)
                         {
                             _frozenCreature.isBeingFrozen = true;
@@ -383,7 +395,14 @@ namespace IceWind
             }
 
             frozenCreature.freezePercent += freezePercentBonus;
-            frozenCreature.AddParticlesToCreature(ps);
+
+            if (addParticles)
+            {
+                frozenCreature.AddParticlesToCreature(ps);
+            }
+
+            
+
 
         }
 

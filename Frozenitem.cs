@@ -24,15 +24,16 @@ namespace IceWind
 
         public List<ParticleSystem> frozenVFXs;
 
-        public bool active;
-
-        public float imbuingDuration;
+        public bool active;       
 
         public bool itemJustFrozen;
 
         public bool removeIceImbuingOnUngrab = true;
 
+        public FrozenItemModule module;
 
+        public bool addParticles = false;
+        public bool infiniteActive = true;
 
         public ParticleSystem freezeVFX = null;
 
@@ -45,6 +46,29 @@ namespace IceWind
             item.OnCollisionEvent += OnFrozenCollision;
             item.OnUngrabEvent += OnUngrab;
             item.OnGrabEvent += OnGrab;
+
+            module = item.data.GetModule<FrozenItemModule>();
+            if (module != null)
+            {
+                infiniteActive = module.alwaysActive;
+                addParticles = module.addParticles;
+                removeIceImbuingOnUngrab = module.removeIceImbuingOnUngrab;
+                iceDamage = module.iceDamage;
+
+
+                if(module.freezeVFXName != "None")
+                {
+                    freezeVFX = transform.Find(module.freezeVFXName).GetComponent<ParticleSystem>();
+
+                }
+                else
+                {
+                    addParticles = false;
+                }
+
+            }
+
+
         }
 
         public void Update()
@@ -67,6 +91,8 @@ namespace IceWind
         {
             if (removeIceImbuingOnUngrab)
             {
+                infiniteActive = false;
+
                 DeactivateTimer();   
             }
         }
@@ -74,7 +100,7 @@ namespace IceWind
 
         public void DeactivateTimer()
         {
-            Invoke("Deactivate", IceWindLevelModule.iceImbuingDuration);
+            Invoke("Deactivate", IceWindLevelModule._iceImbuingDuration);
         }
 
         public void OnGrab(Handle handle, Interactor interactor)
@@ -90,6 +116,11 @@ namespace IceWind
 
         public void Deactivate()
         {
+            if (infiniteActive)
+            {
+                return;
+            }
+
             active = false;
             itemJustFrozen = true;
             CancelInvoke("Deactivate");
@@ -141,7 +172,7 @@ namespace IceWind
                     return;
 
                 case TargetType.NPC:
-                    IceWindController.TryFreezeCreature(collisionStruct.targetCollider.GetComponentInParent<Creature>(), false, 0.1f, freezeVFX);
+                    IceWindController.TryFreezeCreature(collisionStruct.targetCollider.GetComponentInParent<Creature>(), false, 0.1f, freezeVFX, addParticles);
                     break;
 
                     

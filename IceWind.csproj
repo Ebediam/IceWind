@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="FrozenCreature.cs" />
     <Compile Include="FrozenItem.cs" />
+    <Compile Include="FrozenItemModule.cs" />
     <Compile Include="TriggerDetector.cs" />
     <Compile Include="IceWindController.cs" />
     <Compile Include="IceWindLevelModule.cs" />

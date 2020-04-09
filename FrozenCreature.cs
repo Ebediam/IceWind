@@ -26,14 +26,30 @@ namespace IceWind
         public float freezePercent;
         public bool isBeingFrozen;
         public bool activeVFX;
+        public bool wasDead;
 
         public void UpdateFrozenStatus()
         {
             if (!creature)
             {
-                //IceWindController.frozenCreatures.Remove(this);
-                //IceWindController.frozenCreatures.Sort();
                 return;
+            }
+            else
+            {
+                if(creature.state == Creature.State.Dead)
+                {
+                    if (!wasDead)
+                    {
+                        DeactivateParticles();
+                       
+
+                        wasDead = true;
+
+                    }
+
+                    return;
+
+                }
             }
 
 
@@ -54,15 +70,25 @@ namespace IceWind
                 }
             }
 
+            if (wasDead)
+            {
+                wasDead = false;
+                freezePercent = 0f;
+                DeactivateParticles();
+            }
+
+
             if (activeVFX && (freezePercent <= 0f))
             {
+
                 DeactivateParticles();
                 return;
             }
-            else if(!activeVFX && (freezePercent > 0f))
+            else if (!activeVFX && (freezePercent > 0.05f))
             {
                 ActivateParticles();
             }
+
 
 
             Color currentColor = Color.Lerp(baseColor, freezeColor, freezePercent);
@@ -76,10 +102,17 @@ namespace IceWind
 
         }
 
+
+
         public void DeactivateParticles()
         {
-            
-            if(frozenVFXs.Count != 0)
+            if (!IceWindLevelModule.addParticlesToNPC)
+            {
+                return;
+            }
+
+
+            if (frozenVFXs.Count != 0)
             {
                 foreach (ParticleSystem ps in frozenVFXs)
                 {
@@ -87,13 +120,24 @@ namespace IceWind
                 }
             }
 
-
             activeVFX = false;
+
         }
 
         public void ActivateParticles()
         {
-            if(frozenVFXs.Count != 0)
+            if (!IceWindLevelModule.addParticlesToNPC)
+            {
+                return;
+            }
+
+            if (wasDead)
+            {
+                return;
+            }
+
+            activeVFX = true;
+            if (frozenVFXs.Count != 0)
             {
                 foreach (ParticleSystem ps in frozenVFXs)
                 {
@@ -101,7 +145,7 @@ namespace IceWind
                 }
             }
 
-            activeVFX = true;
+
         }
 
 
@@ -119,6 +163,8 @@ namespace IceWind
                     frozenVFXs.Add(_ps);
                 }
             }
+
+            
         }
 
         

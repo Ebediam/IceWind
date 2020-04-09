@@ -10,12 +10,19 @@ namespace IceWind
         public IceWindController rightIceWind;
         public Spell iceWindSpellR;
         public Spell iceWindSpellL;
-        public static float iceImbuingDuration = 5f;
+        public static float _iceImbuingDuration = 5f;
+        public static bool addParticlesToNPC = true;
+        public float iceImbuingDuration;
+
+        public bool addParticlesNPC = true;
+        
 
 
         public override void OnLevelLoaded(LevelDefinition levelDefinition)
         {
             initialized = true; // Set it to true when your script are loaded
+            _iceImbuingDuration = iceImbuingDuration;
+            addParticlesToNPC = addParticlesNPC;
         }
 
         public override void Update(LevelDefinition levelDefinition)
